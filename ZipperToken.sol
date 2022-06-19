@@ -16,8 +16,7 @@ contract ZipperToken is ERC20 {
     } 
     function transfer(address _to, uint256 _value) public override returns (bool success){
         require(tokenBalances[msg.sender] >= _value,"insufficient Token");
-        tokenBalances[msg.sender] -= _value;
-        tokenBalances[ _to ] += _value;
+        _transfer(msg.sender, _to, _value);
 
         emit Transfer( msg.sender , _to , _value);
         return true;
@@ -26,8 +25,7 @@ contract ZipperToken is ERC20 {
     function transferFrom(address _from, address _to, uint256 _value) public override returns (bool success){
         uint allowedBal = allowed[_from][msg.sender];
         require(allowedBal >= _value ,"Insufficient Balance");
-        tokenBalances[_from] -= _value;
-        tokenBalances[_to] -= _value;
+        _transfer(_from, _to, _value);
          emit Transfer( _from , _to , _value);
 
          return true;
