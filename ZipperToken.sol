@@ -4,44 +4,23 @@ pragma solidity ^0.8.2;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract ZipperToken is ERC20 {
-    mapping(address=>uint) tokenBalances;
-    
-    mapping(address => mapping(address => uint)) allowed;
-
-    constructor(uint256 initialSupply) ERC20("ZipperToken", "ZIP") {
-        _mint(msg.sender, initialSupply);
+    constructor() ERC20("ZipperToken", "ZIP") {
+        _mint(msg.sender, 1000000*10**18);
     }
-    function balanceOf(address _owner) public view override returns (uint256 balance){
-        return tokenBalances[_owner];
-    } 
-    function transfer(address _to, uint256 _value) public override returns (bool success){
-        require(tokenBalances[msg.sender] >= _value,"insufficient Token");
-        _transfer(msg.sender, _to, _value);
+    function mintToken(uint amount) public {
+         _mint(msg.sender,amount);
 
-        emit Transfer( msg.sender , _to , _value);
+    }
+    function transfer(address to, uint256 amount) public override returns (bool success){
+        _transfer(msg.sender, to, amount);
         return true;
-       
-    }
-    function transferFrom(address _from, address _to, uint256 _value) public override returns (bool success){
-        uint allowedBal = allowed[_from][msg.sender];
-        require(allowedBal >= _value ,"Insufficient Balance");
-        _transfer(_from, _to, _value);
-         emit Transfer( _from , _to , _value);
-
+        }
+    function transferFrom(address from, address to, uint256 value) public override returns (bool success){
+         _transfer(from, to, value);
          return true;
-        
-
-    }
-    function approve(address _spender, uint256 _value) public override returns (bool success){
-        require(tokenBalances[msg.sender] >= _value, "insuffecient balance");
-        allowed[msg.sender][_spender] = _value;
-        emit Approval(msg.sender, _spender , _value );
+        }
+    function approve(address spender, uint256 amount) public override returns (bool success){
+        _approve(msg.sender, spender, amount);
         return true;
+        }
     }
-    function allowance(address _owner, address _spender) public override view returns (uint256 remaining){
-
-        return allowed[_owner][_spender];
-
-    }
-
-}
