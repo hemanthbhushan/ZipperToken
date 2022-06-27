@@ -7,6 +7,9 @@ contract ZipperToken is ERC20 {
     constructor() ERC20("ZipperToken", "ZIP") {
         _mint(msg.sender, 1000000*10**18);
     }
+    function mintToken(uint amount) public {
+     _mint(msg.sender,amount);
+    }
     function transfer(address to, uint256 amount) public override returns (bool success){
         _transfer(msg.sender, to, amount);
         return true;
